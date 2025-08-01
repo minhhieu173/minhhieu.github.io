@@ -1,13 +1,10 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
 import seaborn as sns
-
+import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
-from sklearn.preprocessing import MinMaxScaler
 
 st.title("📊 ABC Company: Revenue Analysis & Forecasting")
 
@@ -17,11 +14,12 @@ if uploaded_file is not None:
     df = pd.read_csv(uploaded_file)
 
     # Data cleaning
-    df['discounted_price'] = df['discounted_price'].astype(str).str.replace('₹','').str.replace(',','').astype(float)
-    df['actual_price'] = df['actual_price'].astype(str).str.replace('₹','').str.replace(',','').astype(float)
-    df['discount_percentage'] = df['discount_percentage'].astype(str).str.replace('%','').astype(float)
-    df['rating_count'] = df['rating_count'].astype(str).str.replace(',','').astype(float)
+    df['discounted_price'] = df['discounted_price'].str.replace('₹','').str.replace(',','').astype(float)
+    df['actual_price'] = df['actual_price'].str.replace('₹','').str.replace(',','').astype(float)
+    df['discount_percentage'] = df['discount_percentage'].str.replace('%','').astype(float)
     df['rating'] = pd.to_numeric(df['rating'], errors='coerce')
+    df['rating_count'] = df['rating_count'].str.replace(',','')
+    df['rating_count'] = pd.to_numeric(df['rating_count'], errors='coerce')
 
     df_clean = df.dropna(subset=['discounted_price', 'actual_price', 'discount_percentage', 'rating', 'rating_count'])
 
@@ -34,8 +32,11 @@ if uploaded_file is not None:
     st.subheader("📈 Visualizations")
 
     # 1. Count by category
-    sns.countplot(data=df_clean, x='category', order=df_clean['category'].value_counts().index)
-
+    fig1, ax1 = plt.subplots(figsize=(10, 5))
+    sns.countplot(data=df_clean, x='category', order=df_clean['category'].value_counts().index, ax=ax1)
+    ax1.set_title("Product Count by Category")
+    ax1.tick_params(axis='x', rotation=45)
+    st.pyplot(fig1)
 
     # 2. Revenue distribution
     fig2, ax2 = plt.subplots()
@@ -45,13 +46,15 @@ if uploaded_file is not None:
 
     # 3. Discount vs Revenue
     fig3, ax3 = plt.subplots()
-    sns.scatterplot(data=df_clean, x='discount_percentage', y='revenue')
+    sns.scatterplot(data=df_clean, x='discount_percentage', y='revenue', ax=ax3)
     ax3.set_title("Discount % vs Revenue")
     st.pyplot(fig3)
 
     # 4. Rating range vs Revenue
-    sns.boxplot(x=pd.cut(df_clean['rating'], bins=[0,2,3,4,5]), y='revenue', data=df_clean)
-
+    fig4, ax4 = plt.subplots()
+    sns.boxplot(x=pd.cut(df_clean['rating'], bins=[0,2,3,4,5]), y='revenue', data=df_clean, ax=ax4)
+    ax4.set_title("Rating Range vs Revenue")
+    st.pyplot(fig4)
 
     # 5. Correlation heatmap
     fig5, ax5 = plt.subplots()
