@@ -50,10 +50,8 @@ if uploaded_file is not None:
     st.pyplot(fig3)
 
     # 4. Rating range vs Revenue
-    fig4, ax4 = plt.subplots()
     sns.boxplot(x=pd.cut(df_clean['rating'], bins=[0,2,3,4,5]), y='revenue', data=df_clean)
-    ax4.set_title("Rating Range vs Revenue")
-    st.pyplot(fig4)
+
 
     # 5. Correlation heatmap
     fig5, ax5 = plt.subplots()
