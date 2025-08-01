@@ -9,7 +9,9 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.preprocessing import MinMaxScaler
 
-df = pd.read_csv("ABC Manufacturing.csv")  # Upload this manually via Colab
+uploaded_file = st.file_uploader("Upload the amazon.csv dataset", type=["csv"])
+if uploaded_file is not None:
+    df = pd.read_csv(uploaded_file)
 df.head()
 
 df.columns
