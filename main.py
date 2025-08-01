@@ -33,7 +33,7 @@ if uploaded_file is not None:
 
     # 1. Count by category
     fig1, ax1 = plt.subplots(figsize=(10, 5))
-    sns.countplot(data=df_clean, x='category', order=df_clean['category'].value_counts().index, ax=ax1)
+    sns.countplot(data=df_clean, x='category', order=df_clean['category'].value_counts().index)
     ax1.set_title("Product Count by Category")
     ax1.tick_params(axis='x', rotation=45)
     st.pyplot(fig1)
@@ -46,7 +46,7 @@ if uploaded_file is not None:
 
     # 3. Discount vs Revenue
     fig3, ax3 = plt.subplots()
-    sns.scatterplot(data=df_clean, x='discount_percentage', y='revenue', ax=ax3)
+    sns.scatterplot(data=df_clean, x='discount_percentage', y='revenue')
     ax3.set_title("Discount % vs Revenue")
     st.pyplot(fig3)
 
