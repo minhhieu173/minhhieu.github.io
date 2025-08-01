@@ -8,10 +8,8 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
 st.title("📊 ABC Company: Revenue Analysis & Forecasting")
 
-# Upload CSV file
-uploaded_file = st.file_uploader("Upload the amazon.csv dataset", type=["csv"])
-if uploaded_file is not None:
-    df = pd.read_csv(uploaded_file)
+# Load data directly without upload
+df = pd.read_csv("ABC Manufacturing.csv")
 
     # Data cleaning
     df['discounted_price'] = df['discounted_price'].astype(str).str.replace('₹', '').str.replace(',', '').astype(float)
