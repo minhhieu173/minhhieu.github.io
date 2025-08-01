@@ -13,12 +13,12 @@ df = pd.read_csv("ABC Manufacturing.csv")
 
 
     # Data cleaning
-   df['discounted_price'] = df['discounted_price'].astype(str).str.replace('₹','').str.replace(',','').astype(float)
-    df['actual_price'] = df['actual_price'].astype(str).str.replace('₹','').str.replace(',','').astype(float)
-    df['discount_percentage'] = df['discount_percentage'].astype(str).str.replace('%','').astype(float)
-    df['rating_count'] = df['rating_count'].astype(str).str.replace(',','').astype(float)
-
+    df['discounted_price'] = df['discounted_price'].astype(str).str.replace('₹', '').str.replace(',', '').astype(float)
+    df['actual_price'] = df['actual_price'].astype(str).str.replace('₹', '').str.replace(',', '').astype(float)
+    df['discount_percentage'] = df['discount_percentage'].astype(str).str.replace('%', '').astype(float)
     df['rating'] = pd.to_numeric(df['rating'], errors='coerce')
+    df['rating_count'] = df['rating_count'].astype(str).str.replace(',', '')
+    df['rating_count'] = pd.to_numeric(df['rating_count'], errors='coerce')
 
     df_clean = df.dropna(subset=['discounted_price', 'actual_price', 'discount_percentage', 'rating', 'rating_count'])
 
