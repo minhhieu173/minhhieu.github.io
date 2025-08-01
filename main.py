@@ -1,15 +1,10 @@
+import streamlit as st
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
 import seaborn as sns
-
+import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
-from sklearn.preprocessing import MinMaxScaler
-
-
-
 
 st.title("📊 ABC Company: Revenue Analysis & Forecasting")
 
@@ -19,12 +14,12 @@ if uploaded_file is not None:
     df = pd.read_csv(uploaded_file)
 
     # Data cleaning
-    df['discounted_price'] = df['discounted_price'].astype(str).str.replace('₹','').str.replace(',','').astype(float)
-    df['actual_price'] = df['actual_price'].astype(str).str.replace('₹','').str.replace(',','').astype(float)
-    df['discount_percentage'] = df['discount_percentage'].astype(str).str.replace('%','').astype(float)
-    df['rating_count'] = df['rating_count'].astype(str).str.replace(',','').astype(float)
-
+    df['discounted_price'] = df['discounted_price'].str.replace('₹','').str.replace(',','').astype(float)
+    df['actual_price'] = df['actual_price'].str.replace('₹','').str.replace(',','').astype(float)
+    df['discount_percentage'] = df['discount_percentage'].str.replace('%','').astype(float)
     df['rating'] = pd.to_numeric(df['rating'], errors='coerce')
+    df['rating_count'] = df['rating_count'].str.replace(',','')
+    df['rating_count'] = pd.to_numeric(df['rating_count'], errors='coerce')
 
     df_clean = df.dropna(subset=['discounted_price', 'actual_price', 'discount_percentage', 'rating', 'rating_count'])
 
@@ -83,4 +78,5 @@ if uploaded_file is not None:
     st.write(f"- Mean Absolute Error (MAE): {mean_absolute_error(y_test, y_pred):,.2f}")
     st.write(f"- Mean Squared Error (MSE): {mean_squared_error(y_test, y_pred):,.2f}")
     st.write(f"- R-squared (R² Score): {r2_score(y_test, y_pred):.2f}")
+
 
