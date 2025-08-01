@@ -1,18 +1,37 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
 import seaborn as sns
-
+import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
-from sklearn.preprocessing import MinMaxScaler
 
+st.title("📊 ABC Company: Revenue Analysis & Forecasting")
+
+# Upload CSV file
 uploaded_file = st.file_uploader("Upload the amazon.csv dataset", type=["csv"])
 if uploaded_file is not None:
     df = pd.read_csv(uploaded_file)
-  # 1. Count by category
+
+    # Data cleaning
+    df['discounted_price'] = df['discounted_price'].str.replace('₹','').str.replace(',','').astype(float)
+    df['actual_price'] = df['actual_price'].str.replace('₹','').str.replace(',','').astype(float)
+    df['discount_percentage'] = df['discount_percentage'].str.replace('%','').astype(float)
+    df['rating'] = pd.to_numeric(df['rating'], errors='coerce')
+    df['rating_count'] = df['rating_count'].str.replace(',','')
+    df['rating_count'] = pd.to_numeric(df['rating_count'], errors='coerce')
+
+    df_clean = df.dropna(subset=['discounted_price', 'actual_price', 'discount_percentage', 'rating', 'rating_count'])
+
+    # Create revenue column
+    df_clean['revenue'] = df_clean['discounted_price'] * df_clean['rating_count']
+
+    st.subheader("Cleaned Data Preview")
+    st.dataframe(df_clean.head())
+
+    st.subheader("📈 Visualizations")
+
+    # 1. Count by category
     fig1, ax1 = plt.subplots(figsize=(10, 5))
     sns.countplot(data=df_clean, x='category', order=df_clean['category'].value_counts().index, ax=ax1)
     ax1.set_title("Product Count by Category")
@@ -59,6 +78,7 @@ if uploaded_file is not None:
     st.write(f"- Mean Absolute Error (MAE): {mean_absolute_error(y_test, y_pred):,.2f}")
     st.write(f"- Mean Squared Error (MSE): {mean_squared_error(y_test, y_pred):,.2f}")
     st.write(f"- R-squared (R² Score): {r2_score(y_test, y_pred):.2f}")
+
 
 
 
