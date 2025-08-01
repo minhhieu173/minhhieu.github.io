@@ -1,10 +1,13 @@
 import streamlit as st
 import pandas as pd
-import seaborn as sns
+import numpy as np
 import matplotlib.pyplot as plt
+import seaborn as sns
+
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+from sklearn.preprocessing import MinMaxScaler
 
 st.title("📊 ABC Company: Revenue Analysis & Forecasting")
 
@@ -31,11 +34,8 @@ if uploaded_file is not None:
     st.subheader("📈 Visualizations")
 
     # 1. Count by category
-    fig1, ax1 = plt.subplots(figsize=(10, 5))
     sns.countplot(data=df_clean, x='category', order=df_clean['category'].value_counts().index)
-    ax1.set_title("Product Count by Category")
-    ax1.tick_params(axis='x', rotation=45)
-    st.pyplot(fig1)
+
 
     # 2. Revenue distribution
     fig2, ax2 = plt.subplots()
